@@ -1,16 +1,46 @@
 import js from "@eslint/js";
-import globals from "globals";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
+import react from "eslint-plugin-react";
+import globals from "globals";
 
-export default defineConfig([
+export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    plugins: { js },
-    extends: ["js/recommended"],
-    languageOptions: { globals: globals.browser },
+    ignores: ["node_modules/**", "coverage/**"],
   },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-]);
+
+  // Regular JavaScript / Node.js files
+  {
+    files: ["**/*.js"],
+    ...js.configs.recommended,
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
+    },
+  },
+
+  // TypeScript files only
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["**/*.ts", "**/*.tsx"],
+  })),
+
+  // React files only
+  {
+    files: ["**/*.jsx", "**/*.tsx"],
+    plugins: {
+      react,
+    },
+    rules: {
+      ...react.configs.recommended.rules,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+  },
+];
