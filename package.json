@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "docker:build": "docker build -t cicd .",
+    "docker:run": "docker run -p 3000:3000 --init --rm cicd",
+    "format": "npx prettier . --write",
+    "format:check": "npx prettier . --check",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
     "start": "node server.js",
     "test": "jest"
   },
@@ -14,7 +20,11 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.1",
+    "globals": "^17.3.0",
     "jest": "^30.2.0",
+    "prettier": "3.8.1",
     "supertest": "^7.2.2"
   }
 }
